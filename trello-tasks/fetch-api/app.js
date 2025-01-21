@@ -95,13 +95,44 @@ const renderPosts = (posts) => {
   });
 };
 
+const renderNetworkError = (textContent, tryAgainCallback) => {
+  postsContainer.innerHTML = '';
+
+  createElement({
+    tag: 'h3',
+    className: 'error-content',
+    parentNode: postsContainer,
+    textContent,
+  });
+
+  const tryAgain = createElement({
+    tag: 'button',
+    className: 'try-again',
+    parentNode: postsContainer,
+    textContent: 'Try Again',
+  });
+
+  tryAgain.addEventListener('click', () => {
+    tryAgainCallback();
+  });
+};
+
 const fetchPosts = async (page = DEFAULT_PAGE, limit = DEFAULT_LIMIT) => {
   const url = `https://jsonplaceholder.typicode.com/posts?_page=${page}&_per_page=${limit}`;
-  const response = await fetch(url);
+  try {
+    const response = await fetch(url);
 
-  const posts = await response.json();
+    if (response.status !== 200) {
+      throw new Error('Network Error');
+    }
 
-  renderPosts(posts);
+    const posts = await response.json();
+
+    renderPosts(posts);
+  } catch (error) {
+    const message = error.message || 'Network Error';
+    renderNetworkError(message, fetchPosts.bind(null, currentPage));
+  }
 };
 
 const renderPagination = () => {

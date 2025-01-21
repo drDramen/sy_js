@@ -96,3 +96,15 @@ body {
   min-height: 4em;
   text-wrap: balance;
 }
+
+.error-content {
+  margin-bottom: 20px;
+  font-size: 36px;
+  text-align: center;
+}
+
+.try-again {
+  padding: 10px 20px;
+  text-align: center;
+  cursor: pointer;
+}
