@@ -1,6 +1,6 @@
 const CACHE_KEY = 'sw-proxy-v1';
 const TIMEOUT = 1000;
-const CACHE_EXPIRATION = 7200000;
+const CACHE_MAX_AGE = 43200;
 
 class CacheSw {
   #cacheKey;
@@ -42,9 +42,9 @@ class CacheSw {
   isValid(response) {
     if (!response) return false;
 
-    const date = response.headers.get('date');
+    const date = response.headers.get('date-fetched-on');
 
-    return !!(date && new Date().getTime() - parseFloat(date) < CACHE_EXPIRATION);
+    return !!(date && new Date().getTime() - parseFloat(date) < CACHE_MAX_AGE);
   }
 }
 
@@ -69,8 +69,19 @@ const fetchAlgorithm = async (event) => {
     }, TIMEOUT);
 
     const response = await fetch(event.request);
+    const responseClone = response.clone();
+    const { body, ...rest } = responseClone;
 
-    cache.put(event.request, response.clone());
+    const headers = new Headers([...responseClone.headers.entries()]);
+    headers.set('date-fetched-on', new Date().toUTCString());
+
+    cache.put(
+      event.request,
+      new Response(body, {
+        ...rest,
+        headers,
+      })
+    );
 
     return response;
   } catch (e) {
