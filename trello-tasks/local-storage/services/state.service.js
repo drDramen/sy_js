@@ -1,28 +1,39 @@
-import { isQuotaExceededError } from '../utils/storage.js';
+import { isStorageApiSupported } from '../utils/storage.js';
+import { STORAGE_NAME, STORAGE_TYPE } from '../utils/constants.js';
 import { LocalStorageService } from './local-storage.service.js';
+import { CookieStorageService } from './cookie-storage.service.js';
 import { Observable } from './observable.service.js';
 
 export class State {
-  #localStorage = new LocalStorageService();
+  #storage;
   #state;
 
-  get #storageState() {
-    this.#localStorage.getItem(this.name);
-  }
+  constructor({ storageType = STORAGE_TYPE.LocalStorage, name = STORAGE_NAME, initialValue }) {
+    if (!storageType) {
+      throw new Error('Storage type is not defined');
+    }
 
-  constructor(name, initialValue) {
     if (!name) {
       throw new Error('State object should have a name');
     }
 
-    this.#init(name, initialValue);
+    this.#init(storageType, name, initialValue);
   }
 
-  #init(name, initialValue) {
+  #init(storageType, name, initialValue) {
     this.name = name;
 
-    const state = this.#localStorage.init(name, initialValue);
+    const isCookieStorage = storageType === STORAGE_TYPE.Cookie;
+    const _isStorageApi = !isCookieStorage && isStorageApiSupported(storageType);
+
+    this.#storage = _isStorageApi
+      ? new LocalStorageService(storageType)
+      : new CookieStorageService();
+
+    const state = this.#storage.init(name, initialValue);
     this.#state = new Observable(state);
+
+    if (!_isStorageApi) return;
 
     window.addEventListener('storage', (event) => {
       if (this.name !== event.key) {
@@ -38,17 +49,8 @@ export class State {
   }
 
   #updateLocalStorageState() {
-    try {
-      const state = this.getState();
-      this.#localStorage.setItem(this.name, state);
-    } catch (error) {
-      const isQuotaExceeded = isQuotaExceededError(error);
-
-      if (isQuotaExceeded) {
-        this.#localStorage.clear();
-        this.#updateLocalStorageState();
-      }
-    }
+    const state = this.getState();
+    this.#storage.setItem(this.name, state);
   }
 
   set(key, value) {
@@ -65,7 +67,6 @@ export class State {
   }
 
   getState(key) {
-    // return Object.freeze(this.#state.getValue(key));
     return this.#state.getValue(key);
   }
 }
