@@ -1,3 +1,5 @@
+import { STORAGE_TYPE } from './constants.js';
+
 export function isQuotaExceededError(error) {
   return (
     error instanceof DOMException &&
@@ -8,7 +10,7 @@ export function isQuotaExceededError(error) {
   );
 }
 
-function isStorageSupported(type = 'localStorage') {
+export function isStorageApiSupported(type = STORAGE_TYPE.LocalStorage) {
   let storage;
   try {
     storage = window[type];

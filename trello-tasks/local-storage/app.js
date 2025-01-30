@@ -1,13 +1,16 @@
 import { State } from './services/state.service.js';
 import { createElement } from './utils/create-element.js';
 import { getLoggedInButtonText, getThemeButtonText, updateTheme } from './utils/helpers.js';
+import { STORAGE_TYPE } from './utils/constants.js';
 
-const STORAGE_NAME = 'app-config';
 const systemSettingDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-const appConfig = new State(STORAGE_NAME, {
-  theme: systemSettingDark ? 'dark' : 'light',
-  loggedIn: false,
+const appConfig = new State({
+  storageType: STORAGE_TYPE.Cookie,
+  initialValue: {
+    theme: systemSettingDark ? 'dark' : 'light',
+    loggedIn: false,
+  },
 });
 
 updateTheme(appConfig.getState('theme'));
