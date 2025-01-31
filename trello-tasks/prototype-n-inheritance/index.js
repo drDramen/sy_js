@@ -80,6 +80,10 @@ const eBook = new EBook({
   fileSize: 23.4,
 });
 
+console.log('book instanceof Book: ', book instanceof Book);
+console.log('eBook instanceof EBook: ', eBook instanceof EBook);
+console.log('eBook instanceof Book: ', eBook instanceof Book);
+
 console.log(book.getInfo());
 console.log(eBook.getInfo());
 console.log(eBook.download());
