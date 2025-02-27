@@ -1,11 +1,9 @@
-import ImageList from './components/ImageList.js';
-import GalleryForm from './components/GalleryForm.js';
 import { createElement } from './helpers/create-element.js';
 import Gallery from './models/Gallery.js';
 
 const app = document.getElementById('app');
 
-const appHeader = createElement({
+createElement({
   tag: 'header',
   parentNode: app,
   props: {
@@ -19,7 +17,7 @@ const main = createElement({
   parentNode: app,
 });
 
-const footer = createElement({
+createElement({
   tag: 'footer',
   parentNode: app,
   props: {

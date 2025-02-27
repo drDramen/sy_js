@@ -45,15 +45,15 @@ export default class LightBoxControl extends View {
       },
     });
 
-    closeButton.addEventListener('click', (e) => {
+    closeButton.addEventListener('click', () => {
       actionCallback('close');
     });
 
-    previousButton.addEventListener('click', (e) => {
+    previousButton.addEventListener('click', () => {
       actionCallback('prev');
     });
 
-    nextButton.addEventListener('click', (e) => {
+    nextButton.addEventListener('click', () => {
       actionCallback('next');
     });
   }
