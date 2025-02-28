@@ -4,9 +4,13 @@ import GalleryForm from '../components/GalleryForm.js';
 import ImageList from '../components/ImageList.js';
 import LightBox from '../components/LightBox.js';
 
+const STORAGE_NAME = 'sy_gallery_images';
+
 export default class Gallery {
   constructor() {
-    this.state = store({ images: [] });
+    const images = JSON.parse(localStorage.getItem(STORAGE_NAME)) || [];
+
+    this.state = store({ images });
     this.lightBox = new LightBox();
     this.galleryForm = new GalleryForm(this.addImage.bind(this));
     this.imageList = new ImageList(this.openLightBox.bind(this), this.removeImage.bind(this));
@@ -14,6 +18,7 @@ export default class Gallery {
 
   init(parentNode) {
     this.state.subscribe('images', this.imageList.render);
+    this.state.subscribe('images', this.updateStorage.bind(this));
     this.render(parentNode);
   }
 
@@ -46,6 +51,10 @@ export default class Gallery {
 
   removeImage(index) {
     this.state.images = this.state.images.filter((_, i) => i !== index);
+  }
+
+  updateStorage() {
+    localStorage.setItem(STORAGE_NAME, JSON.stringify(this.state.images));
   }
 
   openLightBox(index) {

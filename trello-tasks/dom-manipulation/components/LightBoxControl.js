@@ -24,6 +24,7 @@ export default class LightBoxControl extends View {
       props: {
         className: 'lightbox__button',
         innerHTML: '&#9664;',
+        ariaLabel: 'previous image',
       },
     });
 
@@ -33,6 +34,7 @@ export default class LightBoxControl extends View {
       props: {
         className: 'lightbox__button',
         innerHTML: '&#9654;',
+        ariaLabel: 'next image',
       },
     });
 
@@ -42,6 +44,7 @@ export default class LightBoxControl extends View {
       props: {
         className: 'lightbox__button',
         innerHTML: '&#8569;',
+        ariaLabel: 'close',
       },
     });
 
