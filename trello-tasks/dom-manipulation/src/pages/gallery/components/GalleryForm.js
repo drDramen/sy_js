@@ -1,6 +1,6 @@
-import View from './View.js';
+import { View } from '@components';
 
-export default class GalleryForm extends View {
+export class GalleryForm extends View {
   constructor(handleAddImage) {
     super({
       tag: 'form',

@@ -1,8 +1,8 @@
-import { createElement } from '../helpers/create-element.js';
-import View from './View.js';
-import ImageCard from './ImageCard.js';
+import { createElement } from '@helpers';
+import { View } from '@components';
+import { ImageCard } from './ImageCard.js';
 
-export default class ImageList extends View {
+export class ImageList extends View {
   constructor(handleCardClick, handleCardDelete) {
     super({
       tag: 'ul',
