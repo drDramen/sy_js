@@ -1,0 +1,1 @@
+import{V as s}from"./View-D_Y4_ELN.js";class e extends s{constructor(){super({tag:"section",props:{className:"not-found"}}),this.node.innerHTML='<div class="glitch" data-glitch="404">404</div>'}}export{e as NotFound};
