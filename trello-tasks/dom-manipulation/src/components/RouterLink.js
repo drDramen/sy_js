@@ -1,30 +1,33 @@
 import { View } from './View.js';
 import { Router } from '@/router/router.js';
 
-export class Link extends View {
+export class RouterLink extends View {
   static navigationLinks = [];
 
-  constructor(props) {
-    super({ tag: 'a', props });
+  constructor(props, parentNode) {
+    super({ tag: 'a', props, parentNode });
+
+    RouterLink.navigationLinks.push(this);
+    RouterLink.changeActive();
+
     this.node.addEventListener('click', (event) => {
       event.preventDefault();
       const { currentTarget } = event;
-      if (currentTarget instanceof HTMLAnchorElement) {
+      if (
+        currentTarget instanceof HTMLAnchorElement &&
+        !currentTarget.classList.contains('active')
+      ) {
         window.history.pushState({}, '', currentTarget.href);
-        Link.changeActive();
+        RouterLink.changeActive();
         Router.onPathChangeHandler();
       }
     });
   }
 
-  static addNavigationLink(navigationLink) {
-    this.navigationLinks.push(navigationLink);
-    Link.changeActive();
-  }
-
   static changeActive() {
     const path = window.location.pathname;
-    Link.navigationLinks.forEach((link) => {
+
+    RouterLink.navigationLinks.forEach((link) => {
       if (link.getAttribute('href') === path) {
         link.addClass('active');
       } else {
