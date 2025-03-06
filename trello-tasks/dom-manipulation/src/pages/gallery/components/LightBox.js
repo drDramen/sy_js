@@ -1,8 +1,8 @@
-import { createElement } from '../helpers/create-element.js';
-import View from './View.js';
-import LightBoxControl from './LightBoxControl.js';
+import { View } from '@components';
+import { createElement } from '@helpers';
+import { LightBoxControl } from './LightBoxControl.js';
 
-export default class LightBox extends View {
+export class LightBox extends View {
   constructor() {
     super({
       props: {

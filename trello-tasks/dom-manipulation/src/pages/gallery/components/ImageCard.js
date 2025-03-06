@@ -1,7 +1,7 @@
-import { createElement } from '../helpers/create-element.js';
-import View from './View.js';
+import { View } from '@components';
+import { createElement } from '@helpers';
 
-export default class ImageCard extends View {
+export class ImageCard extends View {
   constructor(data) {
     super({ tag: 'figure', props: {} });
 

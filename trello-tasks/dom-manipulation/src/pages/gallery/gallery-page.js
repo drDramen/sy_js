@@ -1,44 +1,45 @@
-import { store } from '../helpers/store.js';
-import { createElement } from '../helpers/create-element.js';
-import GalleryForm from '../components/GalleryForm.js';
-import ImageList from '../components/ImageList.js';
-import LightBox from '../components/LightBox.js';
+import { View } from '@components';
+import { store, createElement } from '@helpers';
+import { LightBox, GalleryForm, ImageList } from './components';
+
+import './styles.css';
 
 const STORAGE_NAME = 'sy_gallery_images';
 
-export default class Gallery {
+export class GalleryPage extends View {
   constructor() {
+    super({
+      tag: 'section',
+      props: {
+        className: 'gallery container',
+      },
+    });
+
     const images = JSON.parse(localStorage.getItem(STORAGE_NAME)) || [];
 
     this.state = store({ images });
     this.lightBox = new LightBox();
     this.galleryForm = new GalleryForm(this.addImage.bind(this));
     this.imageList = new ImageList(this.openLightBox.bind(this), this.removeImage.bind(this));
+
+    this.init();
   }
 
-  init(parentNode) {
+  init() {
     this.state.subscribe('images', this.imageList.render);
     this.state.subscribe('images', this.updateStorage.bind(this));
-    this.render(parentNode);
+    this.render();
   }
 
-  render(parentNode) {
-    const gallery = createElement({
-      tag: 'article',
-      parentNode,
-      props: {
-        className: 'gallery container',
-      },
-    });
-
+  render() {
     createElement({
       tag: 'header',
-      parentNode: gallery,
+      parentNode: this.node,
       props: {
-        innerHTML: '<h2 class="gallery__title">Task 0</h2>',
+        innerHTML: '<h2 class="gallery__title"> Task: Gallery</h2>',
       },
     });
-    const wrapper = createElement({ parentNode: gallery });
+    const wrapper = createElement({ parentNode: this.node });
 
     this.imageList.render(this.state.images);
 
@@ -59,5 +60,10 @@ export default class Gallery {
 
   openLightBox(index) {
     this.lightBox.init(this.state.images, index);
+  }
+
+  destroy() {
+    super.destroy();
+    this.lightBox.destroy();
   }
 }
