@@ -61,4 +61,9 @@ export class GalleryPage extends View {
   openLightBox(index) {
     this.lightBox.init(this.state.images, index);
   }
+
+  destroy() {
+    super.destroy();
+    this.lightBox.destroy();
+  }
 }
