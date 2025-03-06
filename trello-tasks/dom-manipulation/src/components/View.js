@@ -36,7 +36,7 @@ export class View {
   }
 
   getAttribute(attribute) {
-    this.node.getAttribute(attribute);
+    return this.node.getAttribute(attribute);
   }
 
   setAttribute(attribute, value) {
